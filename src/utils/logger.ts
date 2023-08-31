@@ -1,6 +1,6 @@
 import { createLogger, transports, format } from 'winston'
 
-const logger = createLogger({
+export default createLogger({
   transports: [new transports.Console()],
   format: format.combine(
     format.colorize(),
@@ -10,16 +10,3 @@ const logger = createLogger({
     })
   ),
 })
-
-const info = () => {
-  logger.info('log info')
-}
-
-const error = () => {
-  logger.error('log error')
-}
-
-export default {
-  info,
-  error,
-}

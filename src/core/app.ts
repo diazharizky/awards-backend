@@ -1,12 +1,12 @@
 import express from 'express'
 import session from 'express-session'
 import config from 'config'
-import util from 'util'
 
 import * as interfaces from './interfaces'
 import { AccountsController, AwardsController } from '../routes/controllers'
 import * as middlewares from '../routes/middlewares'
 import { UserSession } from '../models'
+import logger from '../utils/logger'
 
 declare module 'express-session' {
   interface SessionData {
@@ -69,15 +69,12 @@ export class App {
     this.server.use(middlewares.error)
   }
 
-  startServer() {
+  startServer(pid: number) {
     this.server.listen(this.serverCfg.port, this.serverCfg.host, () => {
-      const addr = util.format(
-        'App is listening on %s:%s!',
-        this.serverCfg.host,
-        this.serverCfg.port
+      logger.info(
+        `App is running on ${this.serverCfg.host}:${this.serverCfg.port}`,
+        { message: JSON.stringify({ pid }) }
       )
-
-      console.log(addr)
     })
   }
 }

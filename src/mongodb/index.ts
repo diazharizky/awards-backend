@@ -1,7 +1,9 @@
 import config from 'config'
 import util from 'util'
-import process from 'process'
+import process from 'node:process'
 import mongoose from 'mongoose'
+
+import logger from '../utils/logger'
 
 const host: string = config.get('mongo.host')
 const port: string = config.get('mongo.port')
@@ -13,7 +15,18 @@ export const connect = async () => {
   try {
     await mongoose.connect(uri)
   } catch (err) {
-    console.log('error unable to resolve database connection')
+    const meta: { error: string; stack?: string } = {
+      error: 'unexpected error',
+    }
+
+    if (err instanceof Error) {
+      meta.error = err.message
+      meta.stack = err.stack
+    }
+
+    logger.error('unable to resolve database connection', {
+      message: JSON.stringify(meta),
+    })
 
     process.exit(0)
   }

@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express'
+import { StatusCodes } from 'http-status-codes'
 
 import * as interfaces from '../../core/interfaces'
 import { DefaultResponse } from '../responses'
@@ -31,7 +32,7 @@ export class AwardsController {
 
       const resp = DefaultResponse({ awards })
 
-      res.status(200).json(resp)
+      res.status(StatusCodes.OK).json(resp)
     }
   }
 }

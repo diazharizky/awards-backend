@@ -1,8 +1,9 @@
 import { Router, Request, Response, NextFunction } from 'express'
+import { StatusCodes } from 'http-status-codes'
 
 import * as interfaces from '../../core/interfaces'
 import { DefaultResponse } from '../responses'
-import { StatusCodes } from 'http-status-codes'
+import logger from '../../utils/logger'
 
 export class AccountsController {
   private accountRepository: interfaces.AccountRepository
@@ -31,9 +32,9 @@ export class AccountsController {
 
         req.session.user = { account }
 
-        const resp = DefaultResponse(account)
+        const resp = DefaultResponse({ account })
 
-        res.status(200).json(resp)
+        res.status(StatusCodes.OK).json(resp)
       } catch (error) {
         next(error)
       }
@@ -43,8 +44,13 @@ export class AccountsController {
   signOut() {
     return async (req: Request, res: Response) => {
       req.session.destroy((err) => {
-        if (err) {
-          console.log('error unable to destroy session', err)
+        if (err && err instanceof Error) {
+          logger.error('unable to destroy session', {
+            message: JSON.stringify({
+              error: err.message,
+              stack: err.stack,
+            }),
+          })
         }
       })
 
@@ -52,7 +58,7 @@ export class AccountsController {
         message: 'Successfully logout',
       })
 
-      res.status(200).json(resp)
+      res.status(StatusCodes.OK).json(resp)
     }
   }
 }
