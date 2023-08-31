@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express'
-import { FATAL_ERROR_MESSSAGE } from '../responses/messages'
+import { StatusCodes } from 'http-status-codes'
 
-export default (err: Error, _: Request, res: Response, next: NextFunction) => {
-  if (err != null) {
-    return res.status(500).send(FATAL_ERROR_MESSSAGE)
+export default (req: Request, res: Response, next: NextFunction) => {
+  if (!req.session.user) {
+    return res.sendStatus(StatusCodes.UNAUTHORIZED)
   }
 
   next()
