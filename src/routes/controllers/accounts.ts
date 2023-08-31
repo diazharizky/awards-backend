@@ -4,6 +4,7 @@ import { StatusCodes } from 'http-status-codes'
 import * as interfaces from '../../core/interfaces'
 import { DefaultResponse } from '../responses'
 import logger from '../../utils/logger'
+import { Account } from '../../models'
 
 export class AccountsController {
   private accountRepository: interfaces.AccountRepository
@@ -23,9 +24,13 @@ export class AccountsController {
   }
 
   signIn() {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (
+      req: Request<null, null, Account, null>,
+      res: Response,
+      next: NextFunction
+    ) => {
       try {
-        const account = await this.accountRepository.get()
+        const account = await this.accountRepository.get(req.body)
         if (!account) {
           return res.sendStatus(StatusCodes.UNAUTHORIZED)
         }

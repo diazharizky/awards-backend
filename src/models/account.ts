@@ -4,6 +4,8 @@ export type Account = {
   email: string
 }
 
+export type AccountFilter = Partial<Pick<Account, 'email'>>
+
 export const accountSchema = new Schema({
   email: {
     type: String,

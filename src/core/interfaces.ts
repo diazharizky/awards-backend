@@ -1,7 +1,7 @@
-import { Account, Award, AwardFilter } from '../models'
+import { Account, Award, AwardFilter, AccountFilter } from '../models'
 
 export interface AccountRepository {
-  get(): Promise<Account | null>
+  get(filter: AccountFilter): Promise<Account | null>
 }
 
 export interface AwardRepository {
