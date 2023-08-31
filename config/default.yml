@@ -1,5 +1,12 @@
 app:
-  host: 0.0.0.0
-  port: 3000
   name: nodejs-rest-bootstrap
   version: 0.0.1
+  secret: nosecret
+  server:
+    host: 0.0.0.0
+    port: 3000
+
+mongo:
+  host: localhost
+  port: 27017
+  database: awards
