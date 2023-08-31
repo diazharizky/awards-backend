@@ -1,9 +1,9 @@
-import { Account, Award } from '../models'
+import { Account, Award, AwardFilter } from '../models'
 
 export interface AccountRepository {
-  get(): Promise<Account>
+  get(): Promise<Account | null>
 }
 
 export interface AwardRepository {
-  list(): Promise<Award[]>
+  list(filter: AwardFilter): Promise<Award[]>
 }
