@@ -1,11 +1,10 @@
 import { Account } from '../models'
 import * as interfaces from '../core/interfaces'
+import { AccountM } from '../models'
 
-export default class AccountRepository implements interfaces.AccountRepository {
-  async get(): Promise<Account> {
-    return {
-      id: '1fce7dc4-cf32-4045-8a71-76d6c208159b',
-      email: 'foo@example.com',
-    }
+export class AccountRepository implements interfaces.AccountRepository {
+  async get(): Promise<Account | null> {
+    const account = await AccountM.findOne()
+    return account
   }
 }
