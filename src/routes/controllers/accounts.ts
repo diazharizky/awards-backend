@@ -1,9 +1,10 @@
-import { Router, Request, Response } from 'express'
+import { Router, Request, Response, NextFunction } from 'express'
 
 import * as interfaces from '../../core/interfaces'
 import { DefaultResponse } from '../responses'
+import { StatusCodes } from 'http-status-codes'
 
-export default class AccountsController {
+export class AccountsController {
   private accountRepository: interfaces.AccountRepository
   private router: Router
 
@@ -12,18 +13,44 @@ export default class AccountsController {
 
     this.router = Router({ mergeParams: true })
 
-    this.router.get('/signin', this.get())
+    this.router.post('/signin', this.signIn())
+    this.router.post('/signout', this.signOut())
   }
 
   getRouter(): Router {
     return this.router
   }
 
-  get() {
-    return async (_: Request, res: Response) => {
-      const account = await this.accountRepository.get()
+  signIn() {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const account = await this.accountRepository.get()
+        if (!account) {
+          return res.sendStatus(StatusCodes.UNAUTHORIZED)
+        }
 
-      const resp = DefaultResponse(account)
+        req.session.user = { account }
+
+        const resp = DefaultResponse(account)
+
+        res.status(200).json(resp)
+      } catch (error) {
+        next(error)
+      }
+    }
+  }
+
+  signOut() {
+    return async (req: Request, res: Response) => {
+      req.session.destroy((err) => {
+        if (err) {
+          console.log('error unable to destroy session', err)
+        }
+      })
+
+      const resp = DefaultResponse({
+        message: 'Successfully logout',
+      })
 
       res.status(200).json(resp)
     }
