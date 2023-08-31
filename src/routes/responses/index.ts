@@ -6,13 +6,16 @@ export type Response = {
   error?: string
 }
 
-export const DefaultResponse = (data: unknown): Response => ({
-  ok: true,
-  data,
-})
+export const defaultResponse = (
+  data: unknown,
+  ok: boolean = true
+): Response => ({ ok, data })
 
-export const FatalResponse = (err: Error): Response => ({
+export const fatalResponse = (err: Error): Response => ({
   ok: false,
   data: FATAL_ERROR_MESSSAGE,
   error: err.message,
 })
+
+export const textResponse = (message: string, ok: boolean = true): Response =>
+  defaultResponse({ message }, ok)

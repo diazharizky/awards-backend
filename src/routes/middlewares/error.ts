@@ -2,7 +2,7 @@
 
 import { Request, Response, NextFunction } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { FatalResponse } from '../responses'
+import { fatalResponse } from '../responses'
 
 export default (
   err: Error,
@@ -10,5 +10,5 @@ export default (
   res: Response,
   next: NextFunction
 ) => {
-  res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(FatalResponse(err))
+  res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(fatalResponse(err))
 }

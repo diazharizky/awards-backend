@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express'
 import { StatusCodes } from 'http-status-codes'
 
 import * as interfaces from '../../core/interfaces'
-import { DefaultResponse } from '../responses'
+import { defaultResponse, textResponse } from '../responses'
 import logger from '../../utils/logger'
 import { Account } from '../../models'
 
@@ -32,12 +32,14 @@ export class AccountsController {
       try {
         const account = await this.accountRepository.get(req.body)
         if (!account) {
-          return res.sendStatus(StatusCodes.UNAUTHORIZED)
+          return res
+            .status(StatusCodes.NOT_FOUND)
+            .json(textResponse('Email address does not exist', false))
         }
 
         req.session.user = { account }
 
-        const resp = DefaultResponse({ account })
+        const resp = defaultResponse({ account })
 
         res.status(StatusCodes.OK).json(resp)
       } catch (error) {
@@ -59,11 +61,7 @@ export class AccountsController {
         }
       })
 
-      const resp = DefaultResponse({
-        message: 'Successfully logout',
-      })
-
-      res.status(StatusCodes.OK).json(resp)
+      res.status(StatusCodes.OK).json(textResponse('Successfully logout'))
     }
   }
 }

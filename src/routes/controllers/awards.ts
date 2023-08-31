@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 
 import * as interfaces from '../../core/interfaces'
-import { DefaultResponse } from '../responses'
+import { defaultResponse } from '../responses'
 import { AwardFilter } from '../../models'
 
 export class AwardsController {
@@ -30,7 +30,7 @@ export class AwardsController {
 
       const awards = await this.awardRepository.list(filter)
 
-      const resp = DefaultResponse({ awards })
+      const resp = defaultResponse({ awards })
 
       res.status(StatusCodes.OK).json(resp)
     }
