@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { Request, Response, NextFunction } from 'express'
-import createError from 'http-errors'
+import { StatusCodes } from 'http-status-codes'
 
 export default (req: Request, res: Response, next: NextFunction) => {
-  next(createError(404))
+  res.sendStatus(StatusCodes.NOT_FOUND)
 }
