@@ -1,18 +1,10 @@
 import express from 'express'
-import session from 'express-session'
 import config from 'config'
 
 import * as interfaces from './interfaces'
 import { AccountsController, AwardsController } from '../routes/controllers'
 import * as middlewares from '../routes/middlewares'
-import { UserSession } from '../models'
 import logger from '../utils/logger'
-
-declare module 'express-session' {
-  interface SessionData {
-    user: UserSession
-  }
-}
 
 type serverConfig = {
   host: string
@@ -23,7 +15,6 @@ export class App {
   private accountRepository: interfaces.AccountRepository
   private awardRepository: interfaces.AwardRepository
   private server: express.Express
-  private secret: string
   private serverCfg: serverConfig
 
   constructor(
@@ -34,7 +25,6 @@ export class App {
     this.awardRepository = awardRepository
 
     this.server = express()
-    this.secret = config.get('app.secret')
     this.serverCfg = {
       host: config.get('app.server.host'),
       port: config.get('app.server.port'),
@@ -45,13 +35,6 @@ export class App {
 
   private setupServer() {
     this.server.use(express.json())
-    this.server.use(
-      session({
-        secret: this.secret,
-        resave: false,
-        saveUninitialized: true,
-      })
-    )
 
     const accountsPath = '/accounts'
     const accountsController = new AccountsController(this.accountRepository)

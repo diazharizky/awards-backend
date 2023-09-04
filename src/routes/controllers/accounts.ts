@@ -1,9 +1,10 @@
 import { Router, Request, Response, NextFunction } from 'express'
 import { StatusCodes } from 'http-status-codes'
+import config from 'config'
+import jwt from 'jsonwebtoken'
 
 import * as interfaces from '../../core/interfaces'
 import { defaultResponse, textResponse } from '../responses'
-import logger from '../../utils/logger'
 import { Account } from '../../models'
 
 export class AccountsController {
@@ -16,7 +17,6 @@ export class AccountsController {
     this.router = Router({ mergeParams: true })
 
     this.router.post('/signin', this.signIn())
-    this.router.post('/signout', this.signOut())
   }
 
   getRouter(): Router {
@@ -37,31 +37,15 @@ export class AccountsController {
             .json(textResponse('Email address does not exist', false))
         }
 
-        req.session.user = { account }
+        const secret: string = config.get('app.secret')
+        const token = jwt.sign({ email: account.email }, secret)
 
-        const resp = defaultResponse({ account })
+        const resp = defaultResponse({ token })
 
         res.status(StatusCodes.OK).json(resp)
       } catch (error) {
         next(error)
       }
-    }
-  }
-
-  signOut() {
-    return async (req: Request, res: Response) => {
-      req.session.destroy((err) => {
-        if (err && err instanceof Error) {
-          logger.error('unable to destroy session', {
-            message: JSON.stringify({
-              error: err.message,
-              stack: err.stack,
-            }),
-          })
-        }
-      })
-
-      res.status(StatusCodes.OK).json(textResponse('Successfully logout'))
     }
   }
 }

@@ -3,7 +3,7 @@ app:
   version: 0.0.1
   secret: nosecret
   server:
-    host: 0.0.0.0
+    host: localhost
     port: 5000
 
 mongo:
