@@ -1,0 +1,8 @@
+[
+  {
+    "_id": {
+      "$oid": "64f008b5e40b6982047329c7"
+    },
+    "email": "foo@example.com"
+  }
+]

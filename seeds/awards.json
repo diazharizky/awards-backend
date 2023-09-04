@@ -1,0 +1,26 @@
+[
+  {
+    "_id": {
+      "$oid": "64f0050de40b6982047329c5"
+    },
+    "name": "Gift Card IDR 1.000.000",
+    "type": "voucher",
+    "point": 500000
+  },
+  {
+    "_id": {
+      "$oid": "64f00921e40b6982047329c9"
+    },
+    "name": "Gift Card IDR 500.000",
+    "type": "voucher",
+    "point": 250000
+  },
+  {
+    "_id": {
+      "$oid": "64f0094ae40b6982047329ca"
+    },
+    "name": "Old Fashion Cake",
+    "type": "product",
+    "point": 100000
+  }
+]

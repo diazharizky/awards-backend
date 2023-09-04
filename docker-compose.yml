@@ -8,6 +8,22 @@ services:
     ports:
       - 27017:27017
 
+  mongoseed:
+    image: mongo:6.0.6
+    restart: on-failure
+    depends_on:
+      - mongodb
+    environment:
+      - DATABASE_URI=mongodb://mongodb:27017/awards
+    volumes:
+      - ./seeds/accounts.json:/usr/local/accounts.json
+      - ./seeds/awards.json:/usr/local/awards.json
+    command: >
+      bash -c "
+        mongoimport --uri $$DATABASE_URI --collection accounts --type json --file /usr/local/accounts.json --jsonArray && \
+        mongoimport --uri $$DATABASE_URI --collection awards --type json --file /usr/local/awards.json --jsonArray
+      "
+
 volumes:
   mongodb-data:
     driver: local
