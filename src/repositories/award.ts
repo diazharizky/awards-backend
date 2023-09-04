@@ -1,7 +1,8 @@
 import { Award, AwardM, AwardFilter } from '../models'
 import * as interfaces from '../core/interfaces'
 
-type ParsedFilter = Pick<AwardFilter, 'type'> & {
+type ParsedFilter = {
+  type?: object
   point?: object
 }
 
@@ -9,7 +10,8 @@ export class AwardRepository implements interfaces.AwardRepository {
   async list(filter: AwardFilter): Promise<Award[]> {
     const awards: Award[] = []
 
-    for await (const aw of AwardM.find(this.parseFilter(filter))) {
+    const parsedFilter = this.parseFilter(filter)
+    for await (const aw of AwardM.find(parsedFilter)) {
       awards.push(aw)
     }
 
@@ -22,7 +24,9 @@ export class AwardRepository implements interfaces.AwardRepository {
     if (filter.type) {
       parsedFilter = {
         ...parsedFilter,
-        type: filter.type,
+        type: {
+          $in: filter.type.split(','),
+        },
       }
     }
 
